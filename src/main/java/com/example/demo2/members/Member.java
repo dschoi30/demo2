@@ -1,5 +1,6 @@
 package com.example.demo2.members;
 
+import com.example.demo2.carts.Cart;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,9 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
     private LocalDateTime regDate;
+
+    @OneToOne(mappedBy = "member")
+    private Cart cart;
 
     @Builder
     public Member(String name, String password, String email, Role role, LocalDateTime regDate) {
