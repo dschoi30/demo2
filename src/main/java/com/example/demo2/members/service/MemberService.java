@@ -24,14 +24,14 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public Long save(MemberSaveDto memberSaveDto) {
-        Member member = memberSaveDto.toEntity(passwordEncoder.encode(memberSaveDto.getPassword()));
-        validateDuplicatedMember(member);
+        validateDuplicatedMember(memberSaveDto);
+        Member member = Member.createMember(memberSaveDto, passwordEncoder.encode(memberSaveDto.getPassword()));
         return memberRepository.save(member).getId();
     }
 
-    public void validateDuplicatedMember(Member member) {
-        Member byName = memberRepository.findByName(member.getName());
-        if(byName != null) {
+    public void validateDuplicatedMember(MemberSaveDto memberSaveDto) {
+        Member member = memberRepository.findByName(memberSaveDto.getName());
+        if(member != null) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }

@@ -1,15 +1,19 @@
 package com.example.demo2.members;
 
 import com.example.demo2.carts.Cart;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.demo2.members.dto.MemberSaveDto;
+import com.example.demo2.orders.Order;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 @Entity
 public class Member {
@@ -25,16 +29,24 @@ public class Member {
     private Role role;
     private LocalDateTime regDate;
 
-    @OneToOne(mappedBy = "member")
+    @JsonIgnore
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Cart cart;
 
-    @Builder
-    public Member(String name, String password, String email, Role role, LocalDateTime regDate) {
-        this.name = name;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-        this.regDate = regDate;
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Order> orders;
+
+    public static Member createMember(MemberSaveDto memberSaveDto, String encodedPassword) {
+        return Member.builder()
+                .name(memberSaveDto.getName())
+                .password(encodedPassword)
+                .email(memberSaveDto.getEmail())
+                .role(Role.USER)
+                .regDate(LocalDateTime.now())
+                .cart(new Cart())
+                .orders(new ArrayList<>())
+                .build();
     }
 
     public Member update(String password, String email) {

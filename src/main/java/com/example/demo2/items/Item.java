@@ -1,18 +1,17 @@
 package com.example.demo2.items;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import com.example.demo2.carts.CartItem;
+import com.example.demo2.items.dto.ItemSaveDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 @Entity
 public class Item {
@@ -29,14 +28,18 @@ public class Item {
     private LocalDateTime updateDate;
     private ItemSellStatus itemSellStatus;
 
-    @Builder
-    public Item(String itemName, String description, int price, int stockQuantity, LocalDateTime regDate, LocalDateTime updateDate, ItemSellStatus itemSellStatus) {
-        this.itemName = itemName;
-        this.description = description;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
-        this.regDate = regDate;
-        this.updateDate = updateDate;
-        this.itemSellStatus = itemSellStatus;
+    @JsonIgnore
+    @OneToMany(mappedBy = "item")
+    private List<CartItem> cartItem;
+
+    public static Item createItem(ItemSaveDto itemSaveDto) {
+        return Item.builder()
+                .itemName(itemSaveDto.getItemName())
+                .description(itemSaveDto.getDescription())
+                .price(itemSaveDto.getPrice())
+                .stockQuantity(itemSaveDto.getStockQuantity())
+                .regDate(LocalDateTime.now())
+                .itemSellStatus(ItemSellStatus.SELL)
+                .build();
     }
 }
