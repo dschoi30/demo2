@@ -1,6 +1,7 @@
 package com.example.demo2.items;
 
 import com.example.demo2.carts.CartItem;
+import com.example.demo2.common.BaseEntity;
 import com.example.demo2.items.dto.ItemSaveDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @Builder
 @Getter
 @Entity
-public class Item {
+public class Item extends BaseEntity {
 
     @Id @GeneratedValue
     private Long id;
@@ -24,8 +25,6 @@ public class Item {
     private String description;
     private int price;
     private int stockQuantity;
-    private LocalDateTime regDate;
-    private LocalDateTime updateDate;
     private ItemSellStatus itemSellStatus;
 
     @JsonIgnore
@@ -38,7 +37,6 @@ public class Item {
                 .description(itemSaveDto.getDescription())
                 .price(itemSaveDto.getPrice())
                 .stockQuantity(itemSaveDto.getStockQuantity())
-                .regDate(LocalDateTime.now())
                 .itemSellStatus(ItemSellStatus.SELL)
                 .build();
     }

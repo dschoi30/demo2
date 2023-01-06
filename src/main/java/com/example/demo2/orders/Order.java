@@ -1,5 +1,6 @@
 package com.example.demo2.orders;
 
+import com.example.demo2.common.BaseTimeEntity;
 import com.example.demo2.members.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter
 @Table(name = "orders")
 @Entity
-public class Order {
+public class Order extends BaseTimeEntity {
 
     @Id @GeneratedValue
     private Long id;

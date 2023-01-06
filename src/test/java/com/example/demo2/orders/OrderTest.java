@@ -40,8 +40,6 @@ class OrderTest {
                 .description("nice")
                 .price(10000)
                 .stockQuantity(100)
-                .regDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
                 .itemSellStatus(ItemSellStatus.SELL)
                 .build();
     }
@@ -53,7 +51,6 @@ class OrderTest {
                 .password("1234")
                 .email("test@test.com")
                 .role(Role.USER)
-                .regDate(LocalDateTime.now())
                 .cart(new Cart())
                 .orders(new ArrayList<>())
                 .build();

@@ -19,13 +19,12 @@ class MemberRepositoryTest {
     @Autowired MemberRepository memberRepository;
 
     @Test
-    public void reg_test() {
+    public void create_test() {
         Member savedMember = memberRepository.save(Member.builder()
                 .name("member1")
                 .password("1234")
                 .email("test@test.com")
                 .role(Role.USER)
-                .regDate(LocalDateTime.now())
                 .build());
 
         Member findMember = memberRepository.findAll().get(0);

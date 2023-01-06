@@ -14,8 +14,6 @@ public class ItemSaveDto {
     private String description;
     private int price;
     private int stockQuantity;
-    private LocalDateTime regDate;
-    private LocalDateTime updateDate;
     private ItemSellStatus itemSellStatus;
 
     public Item toEntity() {
@@ -23,8 +21,6 @@ public class ItemSaveDto {
                 .itemName(itemName)
                 .price(price)
                 .stockQuantity(stockQuantity)
-                .regDate(regDate)
-                .updateDate(updateDate)
                 .itemSellStatus(itemSellStatus)
                 .build();
     }

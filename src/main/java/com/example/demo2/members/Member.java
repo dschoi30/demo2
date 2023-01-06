@@ -1,6 +1,7 @@
 package com.example.demo2.members;
 
 import com.example.demo2.carts.Cart;
+import com.example.demo2.common.BaseTimeEntity;
 import com.example.demo2.members.dto.MemberSaveDto;
 import com.example.demo2.orders.Order;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,7 +17,7 @@ import java.util.List;
 @Builder
 @Getter
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue
     private Long id;
@@ -27,7 +28,6 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-    private LocalDateTime regDate;
 
     @JsonIgnore
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
@@ -43,7 +43,6 @@ public class Member {
                 .password(encodedPassword)
                 .email(memberSaveDto.getEmail())
                 .role(Role.USER)
-                .regDate(LocalDateTime.now())
                 .cart(new Cart())
                 .orders(new ArrayList<>())
                 .build();
