@@ -1,12 +1,10 @@
 package com.example.demo2.items.repository;
 
 import com.example.demo2.items.Item;
-import com.example.demo2.items.ItemSellStatus;
+import com.example.demo2.items.ItemSaleStatus;
 import com.example.demo2.items.QItem;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,12 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -41,9 +36,7 @@ class ItemRepositoryTest {
                             .description("nice" + i)
                             .price(10000 + i * 100)
                             .stockQuantity(100 + i)
-                            .regDate(LocalDateTime.now())
-                            .updateDate(LocalDateTime.now())
-                            .itemSellStatus(ItemSellStatus.SELL)
+                            .itemSaleStatus(ItemSaleStatus.SELL)
                     .build());
         }
     }
@@ -61,7 +54,7 @@ class ItemRepositoryTest {
         QItem qItem = QItem.item;
         List<Item> itemList = queryFactory.selectFrom(qItem)
                 .where(
-                        qItem.itemSellStatus.eq(ItemSellStatus.SELL),
+                        qItem.itemSellStatus.eq(ItemSaleStatus.SELL),
                         qItem.description.like("%" + "nice" + "%"),
                         qItem.price.gt(10500))
                 .orderBy(qItem.price.desc())
@@ -83,8 +76,8 @@ class ItemRepositoryTest {
         booleanBuilder.and(item.description.like("%" + description + "%"));
         booleanBuilder.and(item.price.gt(price));
 
-        if(StringUtils.equals(itemSellStatus, ItemSellStatus.SELL)) {
-            booleanBuilder.and(item.itemSellStatus.eq(ItemSellStatus.SELL));
+        if(StringUtils.equals(itemSellStatus, ItemSaleStatus.SELL)) {
+            booleanBuilder.and(item.itemSellStatus.eq(ItemSaleStatus.SELL));
         }
 
         Pageable pageable = PageRequest.of(1, 2);

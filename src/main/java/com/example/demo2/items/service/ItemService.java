@@ -6,6 +6,7 @@ import com.example.demo2.items.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,9 +17,11 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
-    public Long save(ItemSaveDto itemSaveDto) {
+    public Long save(ItemSaveDto itemSaveDto, List<MultipartFile> itemImageFiles) throws Exception {
         Item item = itemSaveDto.createItem();
         itemRepository.save(item);
+
+
 
         return item.getId();
     }

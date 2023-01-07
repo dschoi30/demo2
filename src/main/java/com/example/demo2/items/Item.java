@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -30,7 +29,7 @@ public class Item extends BaseEntity {
 
     private int price;
     private int stockQuantity;
-    private ItemSellStatus itemSellStatus;
+    private ItemSaleStatus itemSaleStatus;
 
     @JsonIgnore
     @OneToMany(mappedBy = "item")
@@ -42,7 +41,7 @@ public class Item extends BaseEntity {
                 .description(itemSaveDto.getDescription())
                 .price(itemSaveDto.getPrice())
                 .stockQuantity(itemSaveDto.getStockQuantity())
-                .itemSellStatus(ItemSellStatus.SELL)
+                .itemSaleStatus(ItemSaleStatus.SELL)
                 .build();
     }
 }

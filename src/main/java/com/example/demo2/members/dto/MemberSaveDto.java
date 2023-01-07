@@ -16,14 +16,4 @@ public class MemberSaveDto {
 
     private Role role;
     private LocalDateTime regDate;
-
-//    public Member toEntity(String encodedPassword) {
-//        return Member.builder()
-//                .name(name)
-//                .password(encodedPassword)
-//                .email(email)
-//                .role(role)
-//                .regDate(regDate)
-//                .build();
-//    }
 }

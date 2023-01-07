@@ -2,14 +2,13 @@ package com.example.demo2.orders;
 
 import com.example.demo2.carts.Cart;
 import com.example.demo2.items.Item;
-import com.example.demo2.items.ItemSellStatus;
+import com.example.demo2.items.ItemSaleStatus;
 import com.example.demo2.items.repository.ItemRepository;
 import com.example.demo2.members.Member;
 import com.example.demo2.members.Role;
 import com.example.demo2.members.repository.MemberRepository;
 import com.example.demo2.orders.repository.OrderItemRepository;
 import com.example.demo2.orders.repository.OrderRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,6 @@ import javax.persistence.EntityNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +38,7 @@ class OrderTest {
                 .description("nice")
                 .price(10000)
                 .stockQuantity(100)
-                .itemSellStatus(ItemSellStatus.SELL)
+                .itemSaleStatus(ItemSaleStatus.SELL)
                 .build();
     }
 
