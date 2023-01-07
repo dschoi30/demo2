@@ -17,7 +17,10 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     public Long save(ItemSaveDto itemSaveDto) {
-        return itemRepository.save(itemSaveDto.toEntity()).getId();
+        Item item = itemSaveDto.createItem();
+        itemRepository.save(item);
+
+        return item.getId();
     }
 
     List<Item> findAll() {

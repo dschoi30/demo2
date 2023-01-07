@@ -23,6 +23,11 @@ public class Item extends BaseEntity {
     private String itemName;
     @Lob
     private String description;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemImage> itemImages;
+
     private int price;
     private int stockQuantity;
     private ItemSellStatus itemSellStatus;
