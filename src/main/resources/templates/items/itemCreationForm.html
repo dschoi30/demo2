@@ -20,8 +20,6 @@
         function bindDomEvent(){
             $(".custom-file-input").on("change", function() {
                 var fileName = $(this).val().split("\\").pop();  //이미지 파일명
-                console.log($(this).val());
-                console.log(fileName);
                 var fileExt = fileName.substring(fileName.lastIndexOf(".")+1); // 확장자 추출
                 fileExt = fileExt.toLowerCase(); //소문자 변환
 

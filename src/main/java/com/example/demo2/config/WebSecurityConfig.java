@@ -33,8 +33,8 @@ public class WebSecurityConfig {
         ;
 
         http.authorizeHttpRequests()
-                .mvcMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
+                .mvcMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .mvcMatchers("/", "/members/**", "/items/**", "/images/**").permitAll()
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .mvcMatchers().authenticated()
         ;

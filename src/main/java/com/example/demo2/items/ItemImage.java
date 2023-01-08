@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
 @Entity
 public class ItemImage extends BaseEntity {
@@ -18,7 +18,7 @@ public class ItemImage extends BaseEntity {
     private String imageName;
     private String originalImageName;
     private String imageUrl;
-    private boolean isRepImage;
+    private boolean isRepImage = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
@@ -28,5 +28,13 @@ public class ItemImage extends BaseEntity {
         this.imageName = imageName;
         this.originalImageName = originalImageName;
         this.imageUrl = imageUrl;
+    }
+
+    public void modifyItem(Item item) {
+        this.item = item;
+    }
+
+    public void isRepImage() {
+        this.isRepImage = true;
     }
 }

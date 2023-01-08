@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@Setter
 @Entity
 public class Item extends BaseEntity {
 
@@ -34,14 +35,4 @@ public class Item extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "item")
     private List<CartItem> cartItem;
-
-    public static Item createItem(ItemSaveDto itemSaveDto) {
-        return Item.builder()
-                .itemName(itemSaveDto.getItemName())
-                .description(itemSaveDto.getDescription())
-                .price(itemSaveDto.getPrice())
-                .stockQuantity(itemSaveDto.getStockQuantity())
-                .itemSaleStatus(ItemSaleStatus.SELL)
-                .build();
-    }
 }
