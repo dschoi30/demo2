@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-@TestPropertySource(properties = {"spring.config.location = classpath:application-test.yaml"})
 class ItemServiceTest {
 
     @Autowired ItemService itemService;

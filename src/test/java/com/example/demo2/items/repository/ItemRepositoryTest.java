@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-@TestPropertySource(properties = {"spring.config.location = classpath:application-test.yaml"})
 class ItemRepositoryTest {
 
     @Autowired EntityManager em;
@@ -56,7 +55,7 @@ class ItemRepositoryTest {
         QItem qItem = QItem.item;
         List<Item> itemList = queryFactory.selectFrom(qItem)
                 .where(
-                        qItem.itemSellStatus.eq(ItemSaleStatus.SELL),
+                        qItem.itemSaleStatus.eq(ItemSaleStatus.SELL),
                         qItem.description.like("%" + "nice" + "%"),
                         qItem.price.gt(10500))
                 .orderBy(qItem.price.desc())
@@ -79,7 +78,7 @@ class ItemRepositoryTest {
         booleanBuilder.and(item.price.gt(price));
 
         if(StringUtils.equals(itemSellStatus, ItemSaleStatus.SELL)) {
-            booleanBuilder.and(item.itemSellStatus.eq(ItemSaleStatus.SELL));
+            booleanBuilder.and(item.itemSaleStatus.eq(ItemSaleStatus.SELL));
         }
 
         Pageable pageable = PageRequest.of(1, 2);
