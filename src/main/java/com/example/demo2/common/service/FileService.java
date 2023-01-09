@@ -14,12 +14,12 @@ public class FileService {
     public String uploadFile(String uploadPath, String originalFileName, byte[] fileData) throws Exception {
         UUID uuid = UUID.randomUUID();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String savedFileName = uuid.toString() + extension;
-        String fileUploadFullUrl = uploadPath + "/" + savedFileName;
+        String renamedFileName = uuid.toString() + extension;
+        String fileUploadFullUrl = uploadPath + "/" + renamedFileName;
         FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
         fos.write(fileData);
         fos.close();
-        return savedFileName;
+        return renamedFileName;
     }
 
     public void deleteFile(String filePath) throws Exception {

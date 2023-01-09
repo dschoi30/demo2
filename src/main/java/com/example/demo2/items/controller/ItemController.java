@@ -7,10 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -44,5 +46,38 @@ public class ItemController {
             model.addAttribute("errorMessage", "상품 등록 중 에러가 발생했습니다.");
         }
     return "redirect:/";
+    }
+
+    @GetMapping(value = "/items/{itemId}")
+    public String itemDetail(@PathVariable("itemId") Long itemId, Model model) {
+        try {
+            ItemSaveDto itemSaveDto = itemService.getItemDetail(itemId);
+            model.addAttribute("itemSaveDto", itemSaveDto);
+        } catch(EntityNotFoundException e) {
+            model.addAttribute("errorMessage", "존재하지 않는 상품입니다.");
+            model.addAttribute("itemSaveDto", new ItemSaveDto());
+            return "items/itemCreationForm";
+        }
+        return "items/itemCreationForm";
+    }
+
+    @PostMapping(value = "/items/{itemId}")
+    public String itemUpdate(@Valid ItemSaveDto itemSaveDto, BindingResult bindingResult,
+                             @RequestParam("itemImageFile") List<MultipartFile> itemImageFiles, Model model) throws Exception {
+        if(bindingResult.hasErrors()) {
+            return "/items/itemCreationForm";
+        }
+        if(itemImageFiles.get(0).isEmpty() && itemSaveDto.getId() == null) {
+            model.addAttribute("errorMessage", "첫 번째 이미지는 필수 입력값입니다.");
+            return "items/itemCreationForm";
+        }
+
+        try {
+            itemService.updateItem(itemSaveDto, itemImageFiles);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다.");
+            return "items/itemCreationForm";
+        }
+        return "redirect:/";
     }
 }

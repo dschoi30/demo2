@@ -35,4 +35,12 @@ public class Item extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "item")
     private List<CartItem> cartItem;
+
+    public void updateItem(ItemSaveDto itemSaveDto) {
+        this.itemName = itemSaveDto.getItemName();
+        this.description = itemSaveDto.getDescription();
+        this.price = itemSaveDto.getPrice();
+        this.stockQuantity = itemSaveDto.getStockQuantity();
+        this.itemSaleStatus = itemSaveDto.getItemSaleStatus();
+    }
 }

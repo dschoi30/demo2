@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
+import javax.persistence.EntityNotFoundException;
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -24,15 +26,30 @@ public class ItemImageService {
 
     public void saveItemImage(ItemImage itemImage, MultipartFile multipartFile) throws Exception {
         String originalImageName = multipartFile.getOriginalFilename();
-        String imageName = "";
+        String renamedImageName = "";
         String imageUrl = "";
 
         if(!StringUtils.isEmpty(originalImageName)) {
-            imageName = fileService.uploadFile(itemImageLocation, originalImageName, multipartFile.getBytes());
-            imageUrl = "/images/items" + imageName;
+            renamedImageName = fileService.uploadFile(itemImageLocation, originalImageName, multipartFile.getBytes());
+            imageUrl = "/images/items" + renamedImageName;
         }
 
-        itemImage.updateItemImage(imageName, originalImageName, imageUrl);
+        itemImage.updateItemImage(originalImageName, renamedImageName, imageUrl);
         itemImageRepository.save(itemImage);
+    }
+
+    public void updateItemImage(Long itemId, MultipartFile multipartFile) throws Exception {
+        if (!multipartFile.isEmpty()) {
+            ItemImage savedItemImage = itemImageRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
+
+            if (!StringUtils.isEmpty(savedItemImage.getRenamedImageName())) {
+                fileService.deleteFile(itemImageLocation + "/" + savedItemImage.getRenamedImageName());
+            }
+
+            String originalImageName = multipartFile.getOriginalFilename();
+            String renamedImageName = fileService.uploadFile(itemImageLocation, originalImageName, multipartFile.getBytes());
+            String imageUrl = "/images/items" + renamedImageName;
+            savedItemImage.updateItemImage(originalImageName, renamedImageName, imageUrl);
+        }
     }
 }

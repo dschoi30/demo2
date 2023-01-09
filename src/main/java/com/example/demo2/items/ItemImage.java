@@ -15,8 +15,8 @@ public class ItemImage extends BaseEntity {
     @Id @GeneratedValue
     private Long id;
 
-    private String imageName;
     private String originalImageName;
+    private String renamedImageName;
     private String imageUrl;
     private boolean isRepImage = false;
 
@@ -24,9 +24,9 @@ public class ItemImage extends BaseEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    public void updateItemImage(String imageName, String originalImageName, String imageUrl) {
-        this.imageName = imageName;
+    public void updateItemImage(String originalImageName, String renamedImageName, String imageUrl) {
         this.originalImageName = originalImageName;
+        this.renamedImageName = renamedImageName;
         this.imageUrl = imageUrl;
     }
 
