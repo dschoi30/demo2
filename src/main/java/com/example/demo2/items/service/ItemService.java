@@ -4,9 +4,12 @@ import com.example.demo2.items.Item;
 import com.example.demo2.items.ItemImage;
 import com.example.demo2.items.dto.ItemImageDto;
 import com.example.demo2.items.dto.ItemSaveDto;
+import com.example.demo2.items.dto.ItemSearchDto;
 import com.example.demo2.items.repository.ItemImageRepository;
 import com.example.demo2.items.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +69,10 @@ public class ItemService {
             itemImageService.updateItemImage(itemImageIds.get(i), itemImageFiles.get(i));
         }
         return item.getId();
+    }
+
+    public Page<Item> getItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getItemPage(itemSearchDto, pageable);
     }
 
     List<Item> findAll() {
