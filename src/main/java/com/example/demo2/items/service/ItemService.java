@@ -5,6 +5,7 @@ import com.example.demo2.items.ItemImage;
 import com.example.demo2.items.dto.ItemImageDto;
 import com.example.demo2.items.dto.ItemSaveDto;
 import com.example.demo2.items.dto.ItemSearchDto;
+import com.example.demo2.items.dto.MainItemDto;
 import com.example.demo2.items.repository.ItemImageRepository;
 import com.example.demo2.items.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,11 @@ public class ItemService {
         Item item = itemSaveDto.createItem();
         itemRepository.save(item);
 
-        for(int i = 0; i < itemImageFiles.size(); i++) {
+        for (int i = 0; i < itemImageFiles.size(); i++) {
             ItemImage itemImage = new ItemImage();
             itemImage.modifyItem(item);
 
-            if(i == 0) {
+            if (i == 0) {
                 itemImage.isRepImage();
             }
             itemImageService.saveItemImage(itemImage, itemImageFiles.get(i));
@@ -44,10 +45,18 @@ public class ItemService {
         return item.getId();
     }
 
+    public List<Item> findAll() {
+        return itemRepository.findAll();
+    }
+
+    public Item findById(Long id) {
+        return itemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
+    }
+
     public ItemSaveDto getItemDetail(Long itemId) {
         List<ItemImage> itemImages = itemImageRepository.findByItemIdOrderByIdAsc(itemId);
         List<ItemImageDto> itemImageDtos = new ArrayList<>();
-        for(ItemImage itemImage : itemImages) {
+        for (ItemImage itemImage : itemImages) {
             ItemImageDto itemImageDto = ItemImageDto.of(itemImage);
             itemImageDtos.add(itemImageDto);
         }
@@ -65,23 +74,17 @@ public class ItemService {
 
         List<Long> itemImageIds = itemSaveDto.getItemImageIds();
 
-        for(int i = 0; i < itemImageFiles.size(); i++) {
+        for (int i = 0; i < itemImageFiles.size(); i++) {
             itemImageService.updateItemImage(itemImageIds.get(i), itemImageFiles.get(i));
         }
         return item.getId();
     }
 
-    public Page<Item> getItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getAdminItemPage(itemSearchDto, pageable);
+    }
+
+    public Page<MainItemDto> getItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getItemPage(itemSearchDto, pageable);
     }
-
-    List<Item> findAll() {
-        return itemRepository.findAll();
-    }
-
-    public Item findById(Long id) {
-        return itemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
-    }
-
-
 }

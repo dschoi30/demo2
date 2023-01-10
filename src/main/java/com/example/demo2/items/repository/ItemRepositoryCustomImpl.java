@@ -3,7 +3,10 @@ package com.example.demo2.items.repository;
 import com.example.demo2.items.Item;
 import com.example.demo2.items.ItemSaleStatus;
 import com.example.demo2.items.QItem;
+import com.example.demo2.items.QItemImage;
+import com.example.demo2.items.dto.MainItemDto;
 import com.example.demo2.items.dto.ItemSearchDto;
+import com.example.demo2.items.dto.QMainItemDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -56,7 +59,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Page<Item> getItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
 
         List<Item> content = queryFactory
                 .selectFrom(item)
@@ -78,6 +81,45 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         searchSaleStatusEq(itemSearchDto.getSearchSaleStatus()),
                         searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery())
                 )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression itemNameLike(String searchQuery) {
+        return StringUtils.isEmpty(searchQuery) ? null : item.itemName.like("%" + searchQuery + "%");
+    }
+
+    @Override
+    public Page<MainItemDto> getItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        QItem item = QItem.item;
+        QItemImage itemImage = QItemImage.itemImage;
+
+        List<MainItemDto> content = queryFactory
+                .select(
+                        new QMainItemDto(
+                                item.id,
+                                item.itemName,
+                                item.description,
+                                itemImage.imageUrl,
+                                item.price
+                        )
+                )
+                .from(itemImage)
+                .join(itemImage.item, item)
+                .where(itemImage.isRepImage.isTrue())
+                .where(itemNameLike(itemSearchDto.getSearchQuery()))
+                .orderBy(item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(Wildcard.count)
+                .from(itemImage)
+                .join(itemImage.item, item)
+                .where(itemImage.isRepImage.isTrue())
+                .where(itemNameLike(itemSearchDto.getSearchQuery()))
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, total);

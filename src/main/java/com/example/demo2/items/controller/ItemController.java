@@ -4,6 +4,7 @@ import com.example.demo2.items.Item;
 import com.example.demo2.items.dto.ItemSaveDto;
 import com.example.demo2.items.dto.ItemSearchDto;
 import com.example.demo2.items.service.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,10 +23,11 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Controller
 public class ItemController {
 
-    @Autowired ItemService itemService;
+    private final ItemService itemService;
 
     @GetMapping("/items/new")
     public String itemSaveForm(Model model) {
@@ -90,10 +92,10 @@ public class ItemController {
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
     public String itemList(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
-        Page<Item> items = itemService.getItemPage(itemSearchDto, pageable);
+        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
         model.addAttribute("items", items);
         model.addAttribute("itemSearchDto", itemSearchDto);
         model.addAttribute("maxPage", 5);
-        return "items/itemList";
+        return "items/adminItemList";
     }
 }
