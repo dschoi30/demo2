@@ -29,13 +29,13 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    @GetMapping("/items/new")
+    @GetMapping("/admin/item/new")
     public String itemSaveForm(Model model) {
         model.addAttribute("itemSaveDto", new ItemSaveDto());
         return "items/itemCreationForm";
     }
 
-    @PostMapping("/items/new")
+    @PostMapping("/admin/item/new")
     public String itemNew(@Valid ItemSaveDto itemSaveDto, BindingResult bindingResult,
                           Model model, @RequestParam("itemImageFile")List<MultipartFile> itemImageFiles) {
 
@@ -56,7 +56,7 @@ public class ItemController {
     return "redirect:/";
     }
 
-    @GetMapping(value = "/admin/items/{itemId}")
+    @GetMapping(value = "/admin/item/{itemId}")
     public String itemDetail(@PathVariable("itemId") Long itemId, Model model) {
         try {
             ItemSaveDto itemSaveDto = itemService.getItemDetail(itemId);
@@ -69,7 +69,7 @@ public class ItemController {
         return "items/itemCreationForm";
     }
 
-    @PostMapping(value = "/items/{itemId}")
+    @PostMapping(value = "/admin/item/{itemId}")
     public String itemUpdate(@Valid ItemSaveDto itemSaveDto, BindingResult bindingResult,
                              @RequestParam("itemImageFile") List<MultipartFile> itemImageFiles, Model model) throws Exception {
         if(bindingResult.hasErrors()) {
