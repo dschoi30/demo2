@@ -56,7 +56,7 @@ public class ItemController {
     return "redirect:/";
     }
 
-    @GetMapping(value = "/items/{itemId}")
+    @GetMapping(value = "/admin/items/{itemId}")
     public String itemDetail(@PathVariable("itemId") Long itemId, Model model) {
         try {
             ItemSaveDto itemSaveDto = itemService.getItemDetail(itemId);
@@ -97,5 +97,12 @@ public class ItemController {
         model.addAttribute("itemSearchDto", itemSearchDto);
         model.addAttribute("maxPage", 5);
         return "items/adminItemList";
+    }
+
+    @GetMapping(value = "/items/{itemId}")
+    public String itemDetail(Model model, @PathVariable("itemId") Long itemId) {
+        ItemSaveDto itemSaveDto = itemService.getItemDetail(itemId);
+        model.addAttribute("item", itemSaveDto);
+        return "items/itemDetail";
     }
 }
