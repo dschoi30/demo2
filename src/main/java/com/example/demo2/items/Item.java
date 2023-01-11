@@ -2,6 +2,7 @@ package com.example.demo2.items;
 
 import com.example.demo2.carts.CartItem;
 import com.example.demo2.common.BaseEntity;
+import com.example.demo2.exception.OutOfStockException;
 import com.example.demo2.items.dto.ItemSaveDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -42,5 +43,13 @@ public class Item extends BaseEntity {
         this.price = itemSaveDto.getPrice();
         this.stockQuantity = itemSaveDto.getStockQuantity();
         this.itemSaleStatus = itemSaveDto.getItemSaleStatus();
+    }
+
+    public void deductStock(int count) {
+        int restStock = this.stockQuantity - count;
+        if(restStock < 0) {
+            throw new OutOfStockException("상품의 재고가 부족합니다. (현재 재고의 수량 " + this.stockQuantity + ")");
+        }
+        this.stockQuantity = restStock;
     }
 }

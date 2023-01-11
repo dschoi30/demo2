@@ -20,14 +20,47 @@
         });
 
         function calculateTotalPrice() {
-            var count = $("#count").val();
-            var price = $("#price").val();
-            var totalPrice = price * count;
+            let count = $("#count").val();
+            let price = $("#price").val();
+            let totalPrice = price * count;
             $("#totalPrice").html(totalPrice + '원');
         }
 
         function order() {
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
 
+            let url = "/orders";
+            let paramData = {
+                itemId: $("#itemId").val(),
+                count: $("#count").val()
+            };
+
+            let param = JSON.stringify(paramData);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json",
+                data: param,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType: "json",
+                cache: false,
+                success: function(result, status) {
+                    alert("주문이 완료되었습니다.");
+                    location.href="/";
+                },
+                error: function(jqXHR, status, error) {
+                    if(jqXHR.status = '401') {
+                        alert("로그인 후 이용 가능합니다.");
+                        location.href='/members/login';
+                    } else {
+                        alert(jqXHR.responseText);
+                    }
+                }
+            });
         }
 
         function addCart() {
