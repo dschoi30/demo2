@@ -9,6 +9,7 @@ import com.example.demo2.members.Role;
 import com.example.demo2.members.repository.MemberRepository;
 import com.example.demo2.orders.Order;
 import com.example.demo2.orders.OrderItem;
+import com.example.demo2.orders.OrderStatus;
 import com.example.demo2.orders.dto.OrderDto;
 import com.example.demo2.orders.repository.OrderRepository;
 import org.junit.jupiter.api.Test;
@@ -68,5 +69,22 @@ class OrderServiceTest {
         int totalPrice = orderDto.getCount() * item.getPrice();
 
         assertEquals(totalPrice, order.getTotalPrice());
+    }
+
+    @Test
+    public void order_cancel_test() {
+        Item item = itemRepository.save(this.createItem());
+        Member member = memberRepository.save(this.createMember());
+
+        OrderDto orderDto = new OrderDto();
+        orderDto.setCount(1);
+        orderDto.setItemId(item.getId());
+        Long orderId = orderService.order(orderDto, member.getName());
+
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        order.cancelOrder();
+
+        assertEquals(order.getOrderStatus(), OrderStatus.CANCEL);
+        assertEquals(item.getStockQuantity(), 100);
     }
 }
