@@ -31,7 +31,6 @@ class MemberTest {
                 .password("1234")
                 .email("test@test.com")
                 .role(Role.USER)
-                .cart(new Cart())
                 .orders(new ArrayList<>())
                 .build();
         memberRepository.save(newMember);

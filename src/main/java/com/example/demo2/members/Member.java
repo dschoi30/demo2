@@ -43,7 +43,6 @@ public class Member extends BaseTimeEntity {
                 .password(encodedPassword)
                 .email(memberSaveDto.getEmail())
                 .role(Role.USER)
-                .cart(new Cart())
                 .orders(new ArrayList<>())
                 .build();
     }

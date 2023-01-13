@@ -3,14 +3,16 @@ package com.example.demo2.carts;
 import com.example.demo2.common.BaseTimeEntity;
 import com.example.demo2.members.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
+@Builder
 @Entity
 public class Cart extends BaseTimeEntity {
 
@@ -26,8 +28,8 @@ public class Cart extends BaseTimeEntity {
     private List<CartItem> cartItems;
 
     public static Cart createCart(Member member) {
-        Cart cart = new Cart();
-        cart.setMember(member);
-        return cart;
+        return Cart.builder()
+                .member(member)
+                .build();
     }
 }
