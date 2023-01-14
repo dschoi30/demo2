@@ -3,6 +3,7 @@ package com.example.demo2.carts.service;
 import com.example.demo2.carts.Cart;
 import com.example.demo2.carts.CartItem;
 import com.example.demo2.carts.dto.CartItemDto;
+import com.example.demo2.carts.dto.CartListItemDto;
 import com.example.demo2.carts.repository.CartItemRepository;
 import com.example.demo2.carts.repository.CartRepository;
 import com.example.demo2.items.Item;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,6 +28,7 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
 
+    @Transactional
     public Long addCart(CartItemDto cartItemDto, String userName) {
         Item item = itemRepository.findById(cartItemDto.getItemId()).orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByName(userName);
@@ -44,5 +48,21 @@ public class CartService {
             cartItemRepository.save(cartItem);
             return cartItem.getId();
         }
+    }
+
+    public List<CartListItemDto> getCartList(String userName) {
+
+        List<CartListItemDto> cartListItemDtos = new ArrayList<>();
+
+        Member member = memberRepository.findByName(userName);
+        Cart cart = cartRepository.findByMemberId(member.getId());
+
+        if(cart == null) {
+            return cartListItemDtos;
+        }
+
+        cartListItemDtos = cartItemRepository.findCartListItemDtos(cart.getId());
+
+        return cartListItemDtos;
     }
 }
