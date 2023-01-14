@@ -1,5 +1,6 @@
 package com.example.demo2.carts;
 
+import com.example.demo2.common.BaseEntity;
 import com.example.demo2.items.Item;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Builder
 @Entity
-public class CartItem {
+public class CartItem extends BaseEntity {
 
     @Id @GeneratedValue
     private Long id;
@@ -36,4 +37,6 @@ public class CartItem {
     public void addCount(int count) {
         this.count += count;
     }
+
+    public void updateCount(int count) { this.count = count; }
 }
