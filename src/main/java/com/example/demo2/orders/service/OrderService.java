@@ -81,4 +81,26 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
         order.cancelOrder();
     }
+
+    @Transactional
+    public Long orders(List<OrderDto> orderDtos, String userName) {
+        Member member = memberRepository.findByName(userName);
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for(OrderDto orderDto : orderDtos) {
+            Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(EntityNotFoundException::new);
+            OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+            orderItems.add(orderItem);
+        }
+
+        Order order = Order.createOrder(member, orderItems);
+
+        for(OrderItem orderItem : orderItems) {
+            orderItem.setOrder(order);
+        }
+
+        orderRepository.save(order);
+
+        return order.getId();
+    }
 }

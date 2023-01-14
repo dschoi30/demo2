@@ -10,6 +10,9 @@ import com.example.demo2.items.Item;
 import com.example.demo2.items.repository.ItemRepository;
 import com.example.demo2.members.Member;
 import com.example.demo2.members.repository.MemberRepository;
+import com.example.demo2.orders.dto.CartOrderDto;
+import com.example.demo2.orders.dto.OrderDto;
+import com.example.demo2.orders.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,7 @@ public class CartService {
     private final MemberRepository memberRepository;
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
+    private final OrderService orderService;
 
     @Transactional
     public Long addCart(CartItemDto cartItemDto, String userName) {
@@ -85,5 +89,28 @@ public class CartService {
     public void deleteCartItem(Long cartItemId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
         cartItemRepository.delete(cartItem);
+    }
+
+    @Transactional
+    public Long orderCartItem(List<CartOrderDto> cartOrderDtos, String userName) {
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        for(CartOrderDto cartOrderDto : cartOrderDtos) {
+            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId()).orElseThrow(EntityNotFoundException::new);
+
+            OrderDto orderDto = new OrderDto();
+            orderDto.setItemId(cartItem.getItem().getId());
+            orderDto.setCount(cartItem.getCount());
+            orderDtos.add(orderDto);
+        }
+
+        Long orderId = orderService.orders(orderDtos, userName);
+
+        for(CartOrderDto cartOrderDto : cartOrderDtos) {
+            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId()).orElseThrow(EntityNotFoundException::new);
+            cartItemRepository.delete(cartItem);
+        }
+
+        return orderId;
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo2.carts.controller;
 import com.example.demo2.carts.dto.CartItemDto;
 import com.example.demo2.carts.dto.CartListItemDto;
 import com.example.demo2.carts.service.CartService;
+import com.example.demo2.orders.dto.CartOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping(value = "/carts")
+    @PostMapping(value = "/cart")
     public @ResponseBody ResponseEntity order(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal) {
         if(bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
@@ -44,7 +45,7 @@ public class CartController {
         return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
     }
 
-    @GetMapping("/carts")
+    @GetMapping("/cart")
     public String cartList(Principal principal, Model model) {
         List<CartListItemDto> cartListItemDtos = cartService.getCartList(principal.getName());
         model.addAttribute("cartItems", cartListItemDtos);
@@ -71,5 +72,24 @@ public class CartController {
 
         cartService.deleteCartItem(cartItemId);
         return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/cart/orders")
+    public @ResponseBody ResponseEntity orderCartItem(@RequestBody CartOrderDto cartOrderDto, Principal principal) {
+
+        List<CartOrderDto> cartOrderDtos = cartOrderDto.getCartOrderDtos();
+
+        if(cartOrderDtos == null || cartOrderDtos.size() == 0) {
+            return new ResponseEntity<String>("주문할 상품이 선택되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        for(CartOrderDto cartOrder : cartOrderDtos) {
+            if(!cartService.validateCartItem(cartOrder.getCartItemId(), principal.getName())) {
+                return new ResponseEntity<String>("주문 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            }
+        }
+
+        Long orderId = cartService.orderCartItem(cartOrderDtos, principal.getName());
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 }
