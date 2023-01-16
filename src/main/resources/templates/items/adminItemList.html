@@ -49,7 +49,7 @@
             <tbody>
             <tr th:each="item, status: ${items.getContent()}">
                 <td th:text="${item.id}"></td>
-                <td><a th:href="'/items/' + ${item.id}" th:text="${item.itemName}"></a></td>
+                <td><a th:href="'/admin/item/' + ${item.id}" th:text="${item.itemName}"></a></td>
                 <td th:text="${item.itemSaleStatus == T(com.example.demo2.items.ItemSaleStatus).SELL} ? '판매중' : '품절'"></td>
                 <td th:text="${item.createdBy}"></td>
                 <td th:text="${item.createdDate}"></td>
