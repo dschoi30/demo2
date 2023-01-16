@@ -42,7 +42,7 @@ public class Member extends BaseTimeEntity {
                 .name(memberSaveDto.getName())
                 .password(encodedPassword)
                 .email(memberSaveDto.getEmail())
-                .role(Role.USER)
+                .role(memberSaveDto.getRole())
                 .orders(new ArrayList<>())
                 .build();
     }

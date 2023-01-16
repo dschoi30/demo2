@@ -13,12 +13,11 @@ var member = {
     },
     save: function() {
         var data = {
-            role: $('input[name=role]').val(),
+            role: $('input[name=role]:checked').val(),
             name: $('#name').val(),
             password: $('#password').val(),
             email: $('#email').val()
         };
-
         $.ajax({
             type: 'POST',
             url: '/api/v1/members',
