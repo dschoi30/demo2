@@ -2,12 +2,14 @@ package com.example.demo2.carts.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.NumberFormat;
 
 @Getter @Setter
 public class CartListItemDto {
 
     private Long cartItemId;
     private String itemName;
+    @NumberFormat(pattern = "###,###")
     private int price;
     private int count;
     private String imageUrl;

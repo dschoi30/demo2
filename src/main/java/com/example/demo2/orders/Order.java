@@ -37,7 +37,7 @@ public class Order extends BaseTimeEntity {
     public static Order createOrder(Member member, List<OrderItem> orderItems) {
         return Order.builder()
                 .member(member)
-                .orderItems(new ArrayList<>(    orderItems))
+                .orderItems(new ArrayList<>(orderItems))
                 .orderDate(LocalDateTime.now())
                 .orderStatus(OrderStatus.ORDER)
                 .build();

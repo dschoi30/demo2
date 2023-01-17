@@ -5,6 +5,7 @@ import com.example.demo2.items.ItemSaleStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ public class ItemSaveDto {
     @NotBlank(message = "상품 설명은 필수 입력 값입니다.")
     private String description;
 
+    @NumberFormat(pattern = "###,###")
     @NotNull(message = "상품 가격은 필수 입력 값입니다.")
     private Integer price;
 
