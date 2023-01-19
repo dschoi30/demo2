@@ -8,6 +8,7 @@ import org.springframework.format.annotation.NumberFormat;
 @Getter @Setter
 public class OrderItemDto {
 
+    private Long itemId;
     private String itemName;
     private int count;
     @NumberFormat(pattern = "###,###")
@@ -15,6 +16,7 @@ public class OrderItemDto {
     private String imageUrl;
 
     public OrderItemDto(OrderItem orderItem, String imageUrl) {
+        this.itemId = orderItem.getItem().getId();
         this.itemName = orderItem.getItem().getItemName();
         this.count = orderItem.getCount();
         this.orderPrice = orderItem.getOrderPrice();

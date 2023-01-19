@@ -111,6 +111,8 @@
           <div class="fs18 font-weight-light">
             <span th:text="${{orderItem.orderPrice}} +'원'"></span>
             <span th:text="${orderItem.count} +'개'"></span>
+<!--            <button type="button" class="btn btn-outline-secondary" onclick="'location.href + @{'/review/' + ${orderItem.itemId} + '/new'}">리뷰 작성</button>-->
+            <a th:href="@{/review/{itemId}/new(itemId=${orderItem.itemId})}">리뷰 작성</a>
           </div>
         </div>
       </div>
