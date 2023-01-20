@@ -4,6 +4,7 @@ import com.example.demo2.items.Item;
 import com.example.demo2.items.dto.ItemSaveDto;
 import com.example.demo2.items.dto.ItemSearchDto;
 import com.example.demo2.items.service.ItemService;
+import com.example.demo2.reviews.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +58,7 @@ public class ItemController {
     return "redirect:/";
     }
 
-    @GetMapping(value = "/admin/item/{itemId}")
+    @GetMapping(value = {"/admin/item/{itemId}", "/admin/"})
     public String itemDetail(@PathVariable("itemId") Long itemId, Model model) {
         try {
             ItemSaveDto itemSaveDto = itemService.getItemDetail(itemId);
@@ -99,10 +101,13 @@ public class ItemController {
         return "items/adminItemList";
     }
 
-    @GetMapping(value = "/items/{itemId}")
-    public String itemDetail(Model model, @PathVariable("itemId") Long itemId) {
-        ItemSaveDto itemSaveDto = itemService.getItemDetail(itemId);
+    @GetMapping(value = {"/items/{itemId}", "/items/{itemId}/{page}"})
+    public String itemDetail(Model model, @PathVariable("itemId") Long itemId, @PathVariable("page")Optional<Integer> page) {
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 4);
+        ItemSaveDto itemSaveDto = itemService.getItemDetailWithReviews(itemId, pageable);
         model.addAttribute("item", itemSaveDto);
+        model.addAttribute("page", pageable.getPageNumber());
+        model.addAttribute("maxPage", 5);
         return "items/itemDetail";
     }
 }

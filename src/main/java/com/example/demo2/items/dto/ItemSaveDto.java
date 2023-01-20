@@ -6,6 +6,8 @@ import com.example.demo2.reviews.dto.ReviewDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -38,6 +40,8 @@ public class ItemSaveDto {
     private List<Long> itemImageIds = new ArrayList<>();
 
     private List<ReviewDto> reviewDtos = new ArrayList<>();
+
+    private Page<ReviewDto> reviewDtosPage;
 
     private static ModelMapper modelMapper = new ModelMapper();
 

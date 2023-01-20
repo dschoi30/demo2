@@ -8,12 +8,16 @@ import com.example.demo2.items.dto.ItemSearchDto;
 import com.example.demo2.items.dto.MainItemDto;
 import com.example.demo2.items.repository.ItemImageRepository;
 import com.example.demo2.items.repository.ItemRepository;
+import com.example.demo2.members.Member;
+import com.example.demo2.members.repository.MemberRepository;
 import com.example.demo2.reviews.Review;
 import com.example.demo2.reviews.ReviewImage;
 import com.example.demo2.reviews.dto.ReviewDto;
+import com.example.demo2.reviews.dto.ReviewImageDto;
 import com.example.demo2.reviews.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +36,7 @@ public class ItemService {
     private final ItemImageService itemImageService;
     private final ItemImageRepository itemImageRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public Long save(ItemSaveDto itemSaveDto, List<MultipartFile> itemImageFiles) throws Exception {
@@ -57,29 +62,47 @@ public class ItemService {
     public Item findById(Long id) {
         return itemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
     }
-
     public ItemSaveDto getItemDetail(Long itemId) {
+        List<ItemImage> itemImages = itemImageRepository.findByItemIdOrderByIdAsc(itemId);
+
+        List<ItemImageDto> itemImageDtos = new ArrayList<>();
+        for (ItemImage itemImage : itemImages) {
+            ItemImageDto itemImageDto = ItemImageDto.of(itemImage);
+            itemImageDtos.add(itemImageDto);
+        }
+
+        Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
+        ItemSaveDto itemSaveDto = ItemSaveDto.of(item);
+        itemSaveDto.setItemImageDtos(itemImageDtos);
+
+        return itemSaveDto;
+    }
+    public ItemSaveDto getItemDetailWithReviews(Long itemId, Pageable pageable) {
         List<ItemImage> itemImages = itemImageRepository.findByItemIdOrderByIdAsc(itemId);
         List<ItemImageDto> itemImageDtos = new ArrayList<>();
         for (ItemImage itemImage : itemImages) {
             ItemImageDto itemImageDto = ItemImageDto.of(itemImage);
             itemImageDtos.add(itemImageDto);
         }
-        List<Review> reviews = reviewRepository.findByItemIdOrderByIdDesc(itemId);
+        List<Review> reviews = reviewRepository.findByItemIdOrderByIdDesc(itemId, pageable);
+        Long totalCount = reviewRepository.countReviewByItemId(itemId);
+
         List<ReviewDto> reviewDtos = new ArrayList<>();
+
         for (Review review : reviews) {
-            ReviewDto reviewDto = ReviewDto.of(review);
+            ReviewDto reviewDto = new ReviewDto(review);
             List<ReviewImage> reviewImages = review.getReviewImages();
             for (ReviewImage reviewImage : reviewImages) {
-
+                ReviewImageDto reviewImageDto = ReviewImageDto.of(reviewImage);
+                reviewDto.addReviewImageDto(reviewImageDto);
             }
             reviewDtos.add(reviewDto);
         }
-
+        Page<ReviewDto> reviewDtosPage = new PageImpl<>(reviewDtos, pageable, totalCount);
         Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
         ItemSaveDto itemSaveDto = ItemSaveDto.of(item);
         itemSaveDto.setItemImageDtos(itemImageDtos);
-        itemSaveDto.setReviewDtos(reviewDtos);
+        itemSaveDto.setReviewDtosPage(reviewDtosPage);
         return itemSaveDto;
     }
 

@@ -123,6 +123,10 @@
             width:100%;
             height:400px;
         }
+        .thumbnail-img{
+            height:100px;
+            width:100px;
+        }
         .wd50{
             height:auto;
             width:50%;
@@ -183,27 +187,46 @@
             <p class="lead" th:text="${item.description}"></p>
         </div>
     </div>
-
     <div th:each="itemImage : ${item.itemImageDtos}" class="text-center">
         <img th:if="${not #strings.isEmpty(itemImage.imageUrl)}" th:src="${itemImage.imageUrl}" class="rounded mgb-15" width="800">
     </div>
-
-    <div th:each="review : ${item.reviewDtos}">
-        <div class="card d-flex">
-            <span th:text="${review.reviewer}"></span>
-            <hr>
-            <div th:text="${review.title}"></div>
-            <hr>
-            <span th:text="${review.createdDate}"></span>
-            <hr>
-            <div th:text="${review.content}"></div>
-            <hr>
-            <div class="card-deck">
-                <span th:each="reviewImage : ${review.reviewImageDtos}">
-                    <img th:if="${not #strings.isEmpty(reviewImage.reviewImageUrl)}" th:src="${reviewImage.reviewImageUrl}" class="thumbnail-img" th:alt="${reviewImage.originalReviewImageName}">
-                </span>
+    <hr>
+    <h2>상품 후기</h2>
+    <div th:each="review : ${item.reviewDtosPage.getContent()}">
+        <div class="card-body">
+            <div class="d-flex mb-4">
+                <div class="ms-3">
+                    <div class="fw-bold" th:text="${review.reviewer}"></div>
+                    <span th:text="${review.title}" class="wd50"></span>
+                    <span th:text="${review.createdDate}" class="wd50"></span>
+                    <div th:text="${review.content}"></div>
+                    <div>
+                        <span th:each="reviewImage : ${review.reviewImageDtos}">
+                            <img th:if="${not #strings.isEmpty(reviewImage.reviewImageUrl)}" th:src="${reviewImage.reviewImageUrl}" class="thumbnail-img" th:alt="${reviewImage.originalReviewImageName}">
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div th:with="start=${(item.reviewDtosPage.number / maxPage) * maxPage + 1},
+        end=(${(item.reviewDtosPage.totalPages == 0) ? 1 : (start + (maxPage - 1) < item.reviewDtosPage.totalPages ? start + (maxPage - 1) : item.reviewDtosPage.totalPages)})">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${item.reviewDtosPage.number eq 0} ? 'disabled' : ''">
+                <a th:href="@{'/items/' + ${itemId} + '/' + ${item.reviewDtosPage.number - 1}}" aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${item.reviewDtosPage.number eq page - 1} ? 'active' : ''">
+                <a th:href="@{'/items/' + ${itemId} + '/' + ${page - 1}}" th:inline="text" class="page-link">[[${page}]]</a>
+            </li>
+            <li class="page-item" th:classappend="${item.reviewDtosPage.number + 1 ge item.reviewDtosPage.totalPages} ? 'disabled' : ''">
+                <a th:href="@{'/items/' + ${itemId} + '/' + ${item.reviewDtosPage.number + 1}}" aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
 </html>

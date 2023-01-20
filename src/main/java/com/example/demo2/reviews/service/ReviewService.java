@@ -54,12 +54,12 @@ public class ReviewService {
 
         Member member = memberRepository.findByName(userName);
         List<Review> reviews = reviewRepository.findByMemberIdOrderByIdDesc(member.getId(), pageable);
-        Long totalCount = reviewRepository.countReview(member.getId());
+        Long totalCount = reviewRepository.countReviewByMemberId(member.getId());
 
         List<ReviewDto> reviewDtos = new ArrayList<>();
 
         for (Review review : reviews) {
-            ReviewDto reviewDto = ReviewDto.of(review);
+            ReviewDto reviewDto = new ReviewDto(review);
             List<ReviewImage> reviewImages = review.getReviewImages();
             for (ReviewImage reviewImage : reviewImages) {
                 ReviewImageDto reviewImageDto = ReviewImageDto.of(reviewImage);
