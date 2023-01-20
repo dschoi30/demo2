@@ -59,10 +59,10 @@ public class ReviewService {
         List<ReviewDto> reviewDtos = new ArrayList<>();
 
         for (Review review : reviews) {
-            ReviewDto reviewDto = new ReviewDto(review);
+            ReviewDto reviewDto = ReviewDto.of(review);
             List<ReviewImage> reviewImages = review.getReviewImages();
             for (ReviewImage reviewImage : reviewImages) {
-                ReviewImageDto reviewImageDto = new ReviewImageDto(reviewImage);
+                ReviewImageDto reviewImageDto = ReviewImageDto.of(reviewImage);
                 reviewDto.addReviewImageDto(reviewImageDto);
             }
             reviewDtos.add(reviewDto);

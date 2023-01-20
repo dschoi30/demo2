@@ -2,8 +2,11 @@ package com.example.demo2.reviews.dto;
 
 import com.example.demo2.reviews.ReviewImage;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
+@NoArgsConstructor
 @Getter @Setter
 public class ReviewImageDto {
 
@@ -12,10 +15,8 @@ public class ReviewImageDto {
     private String renamedReviewImageName;
     private String reviewImageUrl;
 
-    public ReviewImageDto(ReviewImage reviewImage) {
-        this.id = reviewImage.getId();
-        this.originalReviewImageName = reviewImage.getOriginalReviewImageName();
-        this.renamedReviewImageName = reviewImage.getRenamedReviewImageName();
-        this.reviewImageUrl = reviewImage.getReviewImageUrl();
+    private static ModelMapper modelMapper = new ModelMapper();
+    public static ReviewImageDto of(ReviewImage reviewImage) {
+        return modelMapper.map(reviewImage, ReviewImageDto.class);
     }
 }

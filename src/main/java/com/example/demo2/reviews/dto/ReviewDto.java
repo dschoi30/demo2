@@ -25,22 +25,12 @@ public class ReviewDto {
     private LocalDateTime modifiedDate;
     private List<ReviewImageDto> reviewImageDtos = new ArrayList<>();
 
-    public ReviewDto(Review review) {
-        this.id = review.getId();
-        this.itemName = review.getItem().getItemName();
-        this.reviewer = review.getMember().getName();
-        this.title = review.getTitle();
-        this.content = review.getContent();
-        this.createdDate = review.getCreatedDate();
-        this.modifiedDate = review.getModifiedDate();
+    private static ModelMapper modelMapper = new ModelMapper();
+    public static ReviewDto of(Review review) {
+        return modelMapper.map(review, ReviewDto.class);
     }
 
     public void addReviewImageDto(ReviewImageDto reviewImageDto) {
         reviewImageDtos.add(reviewImageDto);
-    }
-
-    private static ModelMapper modelMapper = new ModelMapper();
-    public static ReviewDto of(Review review) {
-        return modelMapper.map(review, ReviewDto.class);
     }
 }

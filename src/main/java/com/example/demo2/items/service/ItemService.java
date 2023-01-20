@@ -9,6 +9,7 @@ import com.example.demo2.items.dto.MainItemDto;
 import com.example.demo2.items.repository.ItemImageRepository;
 import com.example.demo2.items.repository.ItemRepository;
 import com.example.demo2.reviews.Review;
+import com.example.demo2.reviews.ReviewImage;
 import com.example.demo2.reviews.dto.ReviewDto;
 import com.example.demo2.reviews.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,10 @@ public class ItemService {
         List<ReviewDto> reviewDtos = new ArrayList<>();
         for (Review review : reviews) {
             ReviewDto reviewDto = ReviewDto.of(review);
+            List<ReviewImage> reviewImages = review.getReviewImages();
+            for (ReviewImage reviewImage : reviewImages) {
+
+            }
             reviewDtos.add(reviewDto);
         }
 
