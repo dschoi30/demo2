@@ -6,15 +6,21 @@ import com.example.demo2.members.Member;
 import com.example.demo2.members.repository.MemberRepository;
 import com.example.demo2.reviews.Review;
 import com.example.demo2.reviews.ReviewImage;
+import com.example.demo2.reviews.dto.ReviewDto;
+import com.example.demo2.reviews.dto.ReviewImageDto;
 import com.example.demo2.reviews.dto.ReviewSaveDto;
 import com.example.demo2.reviews.repository.ReviewImageRepository;
 import com.example.demo2.reviews.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,5 +48,26 @@ public class ReviewService {
         }
 
         return review.getId();
+    }
+
+    public Page<ReviewDto> getReviewPage(String userName, Pageable pageable) {
+
+        Member member = memberRepository.findByName(userName);
+        List<Review> reviews = reviewRepository.findByMemberIdOrderByIdDesc(member.getId(), pageable);
+        Long totalCount = reviewRepository.countReview(member.getId());
+
+        List<ReviewDto> reviewDtos = new ArrayList<>();
+
+        for (Review review : reviews) {
+            ReviewDto reviewDto = new ReviewDto(review);
+            List<ReviewImage> reviewImages = review.getReviewImages();
+            for (ReviewImage reviewImage : reviewImages) {
+                ReviewImageDto reviewImageDto = new ReviewImageDto(reviewImage);
+                reviewDto.addReviewImageDto(reviewImageDto);
+            }
+            reviewDtos.add(reviewDto);
+        }
+
+        return new PageImpl<ReviewDto>(reviewDtos, pageable, totalCount);
     }
 }

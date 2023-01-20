@@ -29,9 +29,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    private Cart cart;
+//    @JsonIgnore
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+//    private Cart cart;
 
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

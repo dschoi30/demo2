@@ -2,6 +2,7 @@ package com.example.demo2.items.dto;
 
 import com.example.demo2.items.Item;
 import com.example.demo2.items.ItemSaleStatus;
+import com.example.demo2.reviews.dto.ReviewDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
@@ -35,6 +36,8 @@ public class ItemSaveDto {
     private List<ItemImageDto> itemImageDtos = new ArrayList<>();
 
     private List<Long> itemImageIds = new ArrayList<>();
+
+    private List<ReviewDto> reviewDtos = new ArrayList<>();
 
     private static ModelMapper modelMapper = new ModelMapper();
 

@@ -8,6 +8,9 @@ import com.example.demo2.items.dto.ItemSearchDto;
 import com.example.demo2.items.dto.MainItemDto;
 import com.example.demo2.items.repository.ItemImageRepository;
 import com.example.demo2.items.repository.ItemRepository;
+import com.example.demo2.reviews.Review;
+import com.example.demo2.reviews.dto.ReviewDto;
+import com.example.demo2.reviews.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemImageService itemImageService;
     private final ItemImageRepository itemImageRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public Long save(ItemSaveDto itemSaveDto, List<MultipartFile> itemImageFiles) throws Exception {
@@ -60,10 +64,17 @@ public class ItemService {
             ItemImageDto itemImageDto = ItemImageDto.of(itemImage);
             itemImageDtos.add(itemImageDto);
         }
+        List<Review> reviews = reviewRepository.findByItemIdOrderByIdDesc(itemId);
+        List<ReviewDto> reviewDtos = new ArrayList<>();
+        for (Review review : reviews) {
+            ReviewDto reviewDto = ReviewDto.of(review);
+            reviewDtos.add(reviewDto);
+        }
 
         Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
         ItemSaveDto itemSaveDto = ItemSaveDto.of(item);
         itemSaveDto.setItemImageDtos(itemImageDtos);
+        itemSaveDto.setReviewDtos(reviewDtos);
         return itemSaveDto;
     }
 

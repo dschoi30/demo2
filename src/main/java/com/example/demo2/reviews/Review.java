@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,18 +24,20 @@ public class Review extends BaseTimeEntity {
     @Id @GeneratedValue
     private Long id;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
     private String title;
     private String content;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<ReviewImage> reviewImages = new ArrayList<>();
 
     public static Review createReview(ReviewSaveDto reviewSaveDto, Item item, Member member) {
         return Review.builder()

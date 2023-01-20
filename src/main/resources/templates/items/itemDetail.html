@@ -187,5 +187,23 @@
     <div th:each="itemImage : ${item.itemImageDtos}" class="text-center">
         <img th:if="${not #strings.isEmpty(itemImage.imageUrl)}" th:src="${itemImage.imageUrl}" class="rounded mgb-15" width="800">
     </div>
+
+    <div th:each="review : ${item.reviewDtos}">
+        <div class="card d-flex">
+            <span th:text="${review.reviewer}"></span>
+            <hr>
+            <div th:text="${review.title}"></div>
+            <hr>
+            <span th:text="${review.createdDate}"></span>
+            <hr>
+            <div th:text="${review.content}"></div>
+            <hr>
+            <div class="card-deck">
+                <span th:each="reviewImage : ${review.reviewImageDtos}">
+                    <img th:if="${not #strings.isEmpty(reviewImage.reviewImageUrl)}" th:src="${reviewImage.reviewImageUrl}" class="thumbnail-img" th:alt="${reviewImage.originalReviewImageName}">
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
 </html>

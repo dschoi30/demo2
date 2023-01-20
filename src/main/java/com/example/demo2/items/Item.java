@@ -4,6 +4,7 @@ import com.example.demo2.carts.CartItem;
 import com.example.demo2.common.BaseEntity;
 import com.example.demo2.exception.OutOfStockException;
 import com.example.demo2.items.dto.ItemSaveDto;
+import com.example.demo2.reviews.Review;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -36,6 +37,10 @@ public class Item extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "item")
     private List<CartItem> cartItem;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "item")
+    private List<Review> reviews;
 
     public void updateItem(ItemSaveDto itemSaveDto) {
         this.itemName = itemSaveDto.getItemName();

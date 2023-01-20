@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+<th:block layout:fragment="css">
+    <style>
+        .content-mg{
+            margin-left:30%;
+            margin-right:30%;
+            margin-top:2%;
+            margin-bottom:100px;
+        }
+        .thumbnail-img{
+            height:100px;
+            width:100px;
+        }
+        .card{
+            width:750px;
+            height:100%;
+            padding:30px;
+            margin-bottom:20px;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content" class="content-mg">
+
+    <h2 class="mb-4">
+        내 구매 후기
+    </h2>
+
+    <div th:each="review : ${reviews.getContent()}">
+
+        <div class="card d-flex">
+            <span th:text="${review.itemName}"></span>
+            <hr>
+            <span th:text="${review.title}"></span>
+            <hr>
+            <span th:text="${review.content}"></span>
+            <hr>
+            <span th:text="${review.createdDate}"></span>
+            <hr>
+            <div class="card-deck">
+                <span th:each="reviewImage : ${review.reviewImageDtos}">
+                    <img th:if="${not #strings.isEmpty(reviewImage.reviewImageUrl)}" th:src="${reviewImage.reviewImageUrl}" class="thumbnail-img" th:alt="${reviewImage.originalReviewImageName}">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div th:with="start=${(reviews.number / maxPage) * maxPage + 1},
+  end=(${(reviews.totalPages == 0) ? 1 : (start + (maxPage - 1) < reviews.totalPages ? start + (maxPage - 1) : reviews.totalPages)})">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${reviews.number eq 0} ? 'disabled' : ''">
+                <a th:href="@{'/reviews/' + ${reviews.number - 1}}" aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${reviews.number eq page - 1} ? 'active' : ''">
+                <a th:href="@{'/reviews/' + ${page - 1}}" th:inline="text" class="page-link">[[${page}]]</a>
+            </li>
+            <li class="page-item" th:classappend="${reviews.number + 1 ge reviews.totalPages} ? 'disabled' : ''">
+                <a th:href="@{'/reviews/' + ${reviews.number + 1}}" aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</html>
