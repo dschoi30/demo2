@@ -197,8 +197,8 @@
             <div class="d-flex mb-4">
                 <div class="ms-3">
                     <div class="fw-bold" th:text="${review.reviewer}"></div>
-                    <span th:text="${review.title}" class="wd50"></span>
-                    <span th:text="${review.createdDate}" class="wd50"></span>
+                    <div th:text="${review.title}"></div>
+                    <div th:text="${review.createdDate}"></div>
                     <div th:text="${review.content}"></div>
                     <div>
                         <span th:each="reviewImage : ${review.reviewImageDtos}">
